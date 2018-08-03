@@ -65,15 +65,11 @@ public class PoliticsActivity extends AppCompatActivity implements LoaderManager
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ListView NewslistView = (ListView) findViewById(R.id.list);
-
         mAdapter = new PoliticsAdapter(this, new ArrayList<Politics>());
         NewslistView.setAdapter(mAdapter);
-
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         NewslistView.setEmptyView(mEmptyStateTextView);
-
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -87,17 +83,13 @@ public class PoliticsActivity extends AppCompatActivity implements LoaderManager
             mEmptyStateTextView.setText(R.string.no_internet_connection);
 
         }
-
         NewslistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Politics currentNews = mAdapter.getItem(position);
-
                 Uri NewsUri = Uri.parse(currentNews.getUrl());
-
                 Intent websiteIntent = new Intent(Intent.ACTION_VIEW, NewsUri);
-
                 startActivity(websiteIntent);
             }
 
@@ -107,33 +99,24 @@ public class PoliticsActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public Loader<List<Politics>> onCreateLoader(int i, Bundle bundle) {
-
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         // getString retrieves a String value from the preferences. The second parameter is the default value for this preference.
         String section = sharedPrefs.getString(
                 getString(R.string.settings_section_key),
                 getString(R.string.settings_section_default));
-
-        String orderBy  = sharedPrefs.getString(
+        String orderBy = sharedPrefs.getString(
                 getString(R.string.settings_order_by_key),
                 getString(R.string.settings_order_by_default)
         );
-
         // parse breaks apart the URI string that's passed into its parameter
         Uri baseUri = Uri.parse(Guardian_REQUEST_URL);
-
         // buildUpon prepares the baseUri that we just parsed so we can add query parameters to it
         Uri.Builder uriBuilder = baseUri.buildUpon();
-
         // Append query parameter and its value.
-
         if (!section.equals(getString(R.string.settings_section_default))) {
             uriBuilder.appendQueryParameter("section", section);
         }
-
         uriBuilder.appendQueryParameter("order-by", orderBy);
-
         // Return the completed uri `http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&limit=10&minmag=minMagnitude&orderby=time
         return new PoliticsLoader(this, uriBuilder.toString());
     }
@@ -146,8 +129,9 @@ public class PoliticsActivity extends AppCompatActivity implements LoaderManager
         loadingIndicator.setVisibility(View.GONE);
         if (politics != null && !politics.isEmpty()) {
             mAdapter.addAll(politics);
-            }
+        }
     }
+
     @Override
     public void onLoaderReset(Loader<List<Politics>> loader) {
         mAdapter.clear();
@@ -172,7 +156,8 @@ public class PoliticsActivity extends AppCompatActivity implements LoaderManager
         return super.onOptionsItemSelected(item);
     }
 
-}
+    }
+
 
 
 
